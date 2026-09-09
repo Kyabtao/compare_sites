@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparely — Compare anything, side by side</title>
+  <meta name="description" content="Compare products, services and prices side by side. Paste links, auto-scrape specs, and find the best pick instantly." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%234f46e5'/%3E%3Cpath d='M30 35h16v12H30zM54 35h16v12H54zM30 53h16v12H30zM54 53h16v12H54z' fill='white'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#4f46e5"/><path d="M30 35h16v12H30zM54 35h16v12H54zM30 53h16v12H30zM54 53h16v12H54z" fill="#fff"/></svg>
+        </span>
+        <span class="logo-text">Comparely</span>
+      </a>
+      <nav class="nav">
+        <a href="#builder" class="nav-link">New comparison</a>
+        <button id="sampleBtn" class="btn btn-ghost btn-sm">Try a sample</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Compare <span class="grad">anything</span>,<br />side by side.</h1>
+      <p class="hero-sub">Paste product links to auto-scrape specs, add items manually, or search the web — then let Comparely find the best pick for you.</p>
+
+      <form id="discoverForm" class="search-box" autocomplete="off">
+        <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="discoverInput" type="text" placeholder="Search the web for items… e.g. “best phones under 30000”, “Netflix vs Prime”" aria-label="Search the web for items to compare" />
+        <button type="submit" class="btn btn-primary" id="discoverBtn">Discover</button>
+      </form>
+      <div id="discoverStatus" class="discover-status" hidden></div>
+      <div id="discoverResults" class="discover-results" hidden></div>
+    </div>
+  </section>
+
+  <!-- ============ BUILDER ============ -->
+  <main class="container" id="builder">
+    <section class="card builder-card">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <div>
+          <h2 class="step-title">What are you comparing?</h2>
+          <p class="step-sub">Pick a category — it defines which specs matter and how winners are scored.</p>
+        </div>
+      </div>
+      <div id="categoryChips" class="chips"></div>
+    </section>
+
+    <section class="card builder-card">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <div>
+          <h2 class="step-title">Add items</h2>
+          <p class="step-sub">Paste a product page URL to auto-extract specs, search the web, or enter details manually.</p>
+        </div>
+      </div>
+
+      <form id="urlForm" class="url-form" autocomplete="off">
+        <input id="urlInput" type="url" placeholder="Paste a product / page URL — e.g. https://www.amazon.in/… or https://www.flipkart.com/…" aria-label="Product URL" />
+        <button type="submit" class="btn btn-primary" id="addUrlBtn">
+          <span class="btn-label">Scrape &amp; add</span>
+          <span class="spinner" hidden></span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="manualBtn">Add manually</button>
+      </form>
+      <div id="addStatus" class="status-line" hidden></div>
+
+      <div id="itemsList" class="items-list"></div>
+
+      <div class="builder-actions">
+        <button id="compareBtn" class="btn btn-primary btn-lg" disabled>Compare <span id="compareCount"></span></button>
+        <button id="clearBtn" class="btn btn-ghost">Clear all</button>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section id="results" class="results" hidden>
+      <div class="card winner-card" id="winnerCard" hidden></div>
+
+      <div class="card table-card">
+        <div class="table-toolbar">
+          <h2 class="table-title">Comparison</h2>
+          <div class="table-actions">
+            <button id="exportCsvBtn" class="btn btn-secondary btn-sm">Export CSV</button>
+            <button id="shareBtn" class="btn btn-secondary btn-sm">Copy share link</button>
+            <button id="editBtn" class="btn btn-ghost btn-sm">Edit items</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="compare-table" id="compareTable"></table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Comparely — a simple tool for smarter buying decisions.</p>
+      <p class="footer-note">Scraping depends on the source site's policies; some retailers block bots. Data shown is only as accurate as the source page — always verify before buying.</p>
+    </div>
+  </footer>
+
+  <!-- ============ MANUAL ENTRY MODAL ============ -->
+  <div class="modal-backdrop" id="manualModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h3>Add item manually</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+      </div>
+      <form id="manualForm">
+        <label class="field">
+          <span class="field-label">Name *</span>
+          <input type="text" id="manualName" required placeholder="e.g. Nothing Phone (3a)" />
+        </label>
+        <label class="field">
+          <span class="field-label">Image URL <span class="optional">(optional)</span></span>
+          <input type="url" id="manualImage" placeholder="https://…" />
+        </label>
+        <div id="manualFields" class="manual-fields"></div>
+        <div class="custom-field-row" id="customSpecRow">
+          <label class="field">
+            <span class="field-label">Custom spec</span>
+            <input type="text" id="customSpecName" placeholder="Spec name" />
+          </label>
+          <label class="field">
+            <span class="field-label">&nbsp;</span>
+            <input type="text" id="customSpecValue" placeholder="Value" />
+          </label>
+          <button type="button" class="btn btn-secondary" id="addCustomSpecBtn" title="Add custom spec">+</button>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add to comparison</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
