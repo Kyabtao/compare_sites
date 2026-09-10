@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StackCompare — Compare domains, hosting & cloud tools</title>
+  <meta name="description" content="Compare domain registrars, web hosting, VPS and website builders with India pricing. See the true cost — intro vs renewal prices, 3-5 year totals — and find the best value." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230f766e'/%3E%3Cpath d='M28 66 20 58l14-14' stroke='white' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M72 34l8 8-14 14' stroke='white' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M60 24 40 76' stroke='white' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#0f766e"/><path d="M28 66 20 58l14-14" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M72 34l8 8-14 14" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 24 40 76" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>
+        </span>
+        <span class="logo-text">StackCompare</span>
+      </a>
+      <nav class="nav">
+        <a href="#builder" class="nav-link">Compare</a>
+        <button id="sampleBtn" class="btn btn-ghost btn-sm">Try a sample</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">The tools behind every<br />website, <span class="grad">compared honestly</span>.</h1>
+      <p class="hero-sub">Domains, hosting, VPS &amp; website builders — with India pricing and the <strong>true cost</strong> exposed: intro-vs-renewal traps, 3–5 year totals, ₹ per GB of RAM.</p>
+
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">50+</span><span class="stat-label">tools cataloged</span></div>
+        <div class="stat"><span class="stat-num">7</span><span class="stat-label">categories</span></div>
+        <div class="stat"><span class="stat-num">⚡</span><span class="stat-label">true-cost scoring</span></div>
+        <div class="stat"><span class="stat-num">🇮🇳</span><span class="stat-label">₹ India pricing</span></div>
+      </div>
+      <div class="hero-actions">
+        <button id="wizardBtn" class="btn btn-primary btn-lg">🧭 Not sure where to start? Get a recommendation</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUILDER ============ -->
+  <main class="container" id="builder">
+    <section class="card builder-card">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <div>
+          <h2 class="step-title">What are you comparing?</h2>
+          <p class="step-sub">Pick a category — it defines which specs matter and how winners are scored.</p>
+        </div>
+      </div>
+      <div id="categoryChips" class="chips"></div>
+    </section>
+
+    <section class="card builder-card">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <div>
+          <h2 class="step-title">Add tools to compare</h2>
+          <p class="step-sub">Quick-add from the catalog below, paste a pricing-page URL to auto-scrape, or enter details manually.</p>
+        </div>
+      </div>
+
+      <form id="urlForm" class="url-form" autocomplete="off">
+        <input id="urlInput" type="url" placeholder="Paste a pricing page URL — e.g. https://www.hostinger.in/web-hosting or https://www.digitalocean.com/pricing" aria-label="Pricing page URL" />
+        <button type="submit" class="btn btn-primary" id="addUrlBtn">
+          <span class="btn-label">Scrape &amp; add</span>
+          <span class="spinner" hidden></span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="manualBtn">Add manually</button>
+      </form>
+      <div id="addStatus" class="status-line" hidden></div>
+
+      <div class="catalog">
+        <div class="catalog-head">
+          <h3>Quick-add from catalog <span class="catalog-badge">prices · Sep 2026</span></h3>
+          <p>Curated &amp; verified from provider pricing pages. Add the ones you care about, then hit Compare.</p>
+        </div>
+        <div id="catalogList" class="catalog-list"></div>
+      </div>
+
+      <div id="itemsList" class="items-list"></div>
+
+      <div class="builder-actions">
+        <button id="compareBtn" class="btn btn-primary btn-lg" disabled>Compare <span id="compareCount"></span></button>
+        <button id="clearBtn" class="btn btn-ghost">Clear all</button>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section id="results" class="results" hidden>
+      <div class="card winner-card" id="winnerCard" hidden></div>
+
+      <div class="card table-card">
+        <div class="table-toolbar">
+          <h2 class="table-title">Comparison</h2>
+          <div class="table-actions">
+            <button id="exportCsvBtn" class="btn btn-secondary btn-sm">Export CSV</button>
+            <button id="shareBtn" class="btn btn-secondary btn-sm">Copy share link</button>
+            <button id="editBtn" class="btn btn-ghost btn-sm">Edit items</button>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="compare-table" id="compareTable"></table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>StackCompare</strong> — honest comparison of the tools behind every website: domain registrars, hosting, VPS &amp; builders.</p>
+      <p class="footer-note">Prices compiled from provider pricing pages in Sep 2026 (₹ approximations at $1 ≈ ₹86.5, €1 ≈ ₹96.5). Providers change prices and promos frequently — always verify on the provider's site before buying. "3-yr / 5-yr" computed costs assume the intro rate is locked for a typical 36-month term. This site is independent and not affiliated with any provider.</p>
+    </div>
+  </footer>
+
+  <!-- ============ MANUAL ENTRY MODAL ============ -->
+  <div class="modal-backdrop" id="manualModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h3>Add tool manually</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close">&times;</button>
+      </div>
+      <form id="manualForm">
+        <label class="field">
+          <span class="field-label">Name *</span>
+          <input type="text" id="manualName" required placeholder="e.g. Hostinger Premium" />
+        </label>
+        <label class="field">
+          <span class="field-label">Image URL <span class="optional">(optional)</span></span>
+          <input type="url" id="manualImage" placeholder="https://…" />
+        </label>
+        <div id="manualFields" class="manual-fields"></div>
+        <div class="custom-field-row" id="customSpecRow">
+          <label class="field">
+            <span class="field-label">Custom spec</span>
+            <input type="text" id="customSpecName" placeholder="Spec name" />
+          </label>
+          <label class="field">
+            <span class="field-label">&nbsp;</span>
+            <input type="text" id="customSpecValue" placeholder="Value" />
+          </label>
+          <button type="button" class="btn btn-secondary" id="addCustomSpecBtn" title="Add custom spec">+</button>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add to comparison</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ WIZARD MODAL ============ -->
+  <div class="modal-backdrop" id="wizardModal" hidden>
+    <div class="modal wizard">
+      <div class="modal-head">
+        <h3>🧭 Find the right tools</h3>
+        <button class="modal-close" id="wizardCloseBtn" aria-label="Close">&times;</button>
+      </div>
+      <div class="wiz-progress">
+        <span id="wizStepLabel">Step 1 of 4</span>
+        <div class="wiz-bar"><div class="wiz-fill" id="wizFill"></div></div>
+      </div>
+      <div id="wizQuestion" class="wiz-question"></div>
+      <div id="wizOptions" class="wiz-options"></div>
+      <div id="wizResult" class="wiz-result" hidden></div>
+      <div class="wiz-actions">
+        <button id="wizBackBtn" class="btn btn-ghost" hidden>← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/catalog.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
