@@ -1,0 +1,46 @@
+# Render Blueprint — Comparely & StackCompare (monorepo)
+#
+# Deploy: Render Dashboard → New + → Blueprint → select this repo.
+# Render auto-detects `render.yaml` at the repo root. A byte-identical
+# `render.yml` alias is kept alongside it for tooling that expects .yml.
+#
+# Both apps are zero-dependency Node web services that listen on
+# process.env.PORT (set by Render) on 0.0.0.0 and expose
+# GET /api/templates, which is used as the health check path.
+
+services:
+  # Comparely — general-purpose comparison site with built-in web scraping
+  - type: web
+    name: comparely
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: compare-site
+    buildCommand: npm install --no-audit --no-fund
+    startCommand: node server.js
+    healthCheckPath: /api/templates
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+
+  # StackCompare — honest comparison of web-dev tools (India pricing + true-cost scoring)
+  - type: web
+    name: stackcompare
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    rootDir: stackcompare
+    buildCommand: npm install --no-audit --no-fund
+    startCommand: node server.js
+    healthCheckPath: /api/templates
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
